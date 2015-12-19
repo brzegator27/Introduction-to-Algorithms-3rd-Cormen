@@ -1,3 +1,5 @@
+void nl();
+
 template<typename T, typename S>
 void printTable(T arr, int arrLength, S splitter);
 
