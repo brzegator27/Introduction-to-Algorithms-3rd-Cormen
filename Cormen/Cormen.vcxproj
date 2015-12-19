@@ -79,9 +79,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\ch2\insertionSort.cpp" />
+    <ClCompile Include="src\ch2\mergeSort.cpp" />
+    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\util\util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\allHeaders.h" />
+    <ClInclude Include="src\ch2\allHeaders.h" />
+    <ClInclude Include="src\ch2\insertionSort.h" />
+    <ClInclude Include="src\ch2\mergeSort.h" />
     <ClInclude Include="src\util\util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

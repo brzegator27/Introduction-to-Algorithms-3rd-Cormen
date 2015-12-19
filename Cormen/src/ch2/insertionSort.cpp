@@ -47,8 +47,7 @@ int* addTwoBinaryIntegers(int* numb1, int* numb2, int numbsLength) {
 	return additionResult;
 }
 
-int main() {
-	int stop;
+int insertionSortMain() {
 	char nl[1] = { '\n' };
 	int tab_1[6] = { 1, 12, 31, 2, 12, 412 };
 
@@ -67,5 +66,5 @@ int main() {
 	int* additionResult = addTwoBinaryIntegers(tab_2, tab_3, 3);
 	printTable(additionResult, 4, " ");
 
-	std::cin >> stop;
+	return 0;
 }
