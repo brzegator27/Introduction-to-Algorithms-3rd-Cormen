@@ -29,6 +29,9 @@ void merge(double* arr, int low, int mid, int high) {
 			++j;
 		}
 	}
+
+	delete[]duplicatedArrLeft;
+	delete[]duplicatedArrRight;
 }
 
 void mergeSort(double* arr, int low, int high) {

@@ -1,5 +1,6 @@
 #include <iostream>
+#include <amp.h>
 
 void nl() {
-	std::cout << '\n';
+	std::cout << std::endl;
 }

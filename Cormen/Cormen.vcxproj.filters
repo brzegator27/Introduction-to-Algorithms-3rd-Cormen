@@ -27,6 +27,9 @@
     <ClCompile Include="src\ch2\mergeSort.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ch2\ex_2_3_2.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\util\util.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\allHeaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ch2\exs_header.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
