@@ -10,7 +10,8 @@
 #define NOMINMAX
 /**
  * Header from Visula Leak Detector, more on:
- * http://vld.codeplex.com/
+ * http://vld.codeplex.com/.
+ * Used version: v2.3, stable.
 */
 #include <vld.h>
 
