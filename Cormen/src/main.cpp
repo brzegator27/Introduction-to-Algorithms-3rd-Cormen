@@ -8,6 +8,10 @@
  * http://stackoverflow.com/questions/14657474/conflict-of-windows-h-and-limits.
 */
 #define NOMINMAX
+/**
+ * Header from Visula Leak Detector, more on:
+ * http://vld.codeplex.com/
+*/
 #include <vld.h>
 
 int main() {
