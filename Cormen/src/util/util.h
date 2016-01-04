@@ -1,4 +1,9 @@
+#include <array>
+
 void nl();
+
+template<typename T, std::size_t SIZE, typename SPLITTER>
+void printTable(std::array<T, SIZE> arr, SPLITTER splitter);
 
 template<typename T, typename S>
 void printTable(T arr, int arrLength, S splitter);
@@ -9,6 +14,13 @@ void printTableRange(T arr, int start, int end, S splitter);
 
 
 //Definitions ----------------------------------------------
+
+template<typename T, std::size_t SIZE, typename SPLITTER>
+void printTable(std::array<T, SIZE> arr, SPLITTER splitter) {
+	for (size_t i = 0; i < arr.size(); ++i) {
+		std::cout << arr[i] << splitter;
+	}
+}
 
 template<typename T, typename S>
 void printTable(T arr, int arrLength, S splitter) {

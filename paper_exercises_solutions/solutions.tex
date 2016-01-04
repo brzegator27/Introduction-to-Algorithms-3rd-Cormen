@@ -1,0 +1,176 @@
+\documentclass[a4paper,11pt]{exam}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage[]{mathtools}
+\usepackage[]{amssymb}
+% amsthm defines for example proof sections or probably I mean "sections"
+\usepackage{amsthm}
+\usepackage[noend]{algpseudocode}
+
+\title{Solutions to exercises from ``Introduction to Algorithms'' \\*3rd Edition by Cormen}
+\author{Jakub Brzegowski}
+\date{25 December 2015}
+
+\setlength{\parindent}{0em}
+\setlength{\parskip}{2em}
+
+\newcommand{\ForsTo}{\text{ \textbf{to} }}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Source: http://tex.stackexchange.com/questions/239697/how-can-i-typeset-an-algorithm-with-columns-as-in-clrs-introduction-to-algorith
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\TITLE}[1]{\item[#1]}
+\renewcommand{\algorithmiccomment}[1]{$/\!/$ \parbox[t]{4.5cm}{\raggedright #1}}
+% ugly hack for for/while
+\newbox\fixbox
+\renewcommand{\algorithmicdo}{\setbox\fixbox\hbox{\ {} }\hskip-\wd\fixbox}
+% end of hack
+\newcommand{\algcost}[2]{\strut\hfill\makebox[1.5cm][l]{#1}\makebox[4cm][l]{#2}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\maketitle
+
+% \section{Introduction}
+Ex. 2.2-1
+\[
+    \Theta \left( n^3/1000 - 100 n^2 - 100 n + 3\right) = \Theta \left( n^3 \right).
+\]
+
+Ex. 2.2-2
+% \uppercase{selection sort(A)}:
+\begin{algorithmic}[1]
+    \TITLE{\textsc{Selection-Sort\((A)\)}}
+    \algcost{\textit{cost}}{\textit{times}}
+    \For{\(i = 1 \ForsTo A.length - 1\)}
+    \algcost{$c_1$}{$n$}
+        \State \(smallestElementIndex = i\)
+        \algcost{$c_2$}{$n - 1$}
+        \For{\(j = smallestElementIndex + 1 \ForsTo A.length\)}
+        \algcost{$c_3$}{$\sum_{i = 1}^{n - 1} t_i$}
+            \If{\(A[j] < A[smallestElementIndex]\)}
+            \algcost{$c_4$}{$\sum_{i = 1}^{n - 1} (t_i - 1)$}
+                \State \(smallestElementIndex = j\)
+                \algcost{$c_5$}{$\sum_{i = 1}^{n - 1} (t_i - 1)$}
+            \EndIf
+        \EndFor
+        \State \(temp = A[i]\)
+        \algcost{$c_6$}{$n - 1$}
+        \State \(A[i] = A[smallestElementIndex]\)
+        \algcost{$c_7$}{$n - 1$}
+        \State \(A[smallestElementIndex] = temp\)
+        \algcost{$c_8$}{$n - 1$}
+    \EndFor
+\end{algorithmic}
+\textbf{\(t_j\) denotes the number of times the for loop test(probably assigning successive values to \(j\), or something like that) is executed for that value of \(j\).} \\
+The loop invariant are sorted elements \(A[1 \ldots i - 1]\). It is true at the beginning where \(A[1 \ldots 0]\) consists of \(0\) elements. It is also true during the execution of for loop because after each iteration one element is added at the end of sorted sequence and this element has no higher value than the previous ones, because the previous elements were chosen before this one so they must have lower value. After the whole iteration the \(A[1 \ldots n - 1]\) is sorted as stated before and the last element is sorted too so the loop invariant is fulfilled.
+
+
+
+Worst case and best case have the same time cost, because there is no condition on which nested for loop can terminate:
+\[
+    \begin{split}
+        T(n) & = c_1 n + c_2 (n - 1) + c_3 \sum_{i = 1}^{n - 1} (t_i) + c_4 \sum_{i = 1}^{n - 1} (t_i - 1) + \\
+            & \quad + c_5 \sum_{i = 1}^{n - 1} (t_i - 1) + c_6 (n - 1) + c_7 (n - 1) + c_8 (n - 1) \\
+        & = c_1 n + c_2 (n - 1) + c_3 \frac{(n - 1)(1 + (n - 1))}{2} + c_4 \frac{(n - 1)(0 + (n - 2))}{2} + \\
+            & \quad + c_5 \frac{(n - 1)(0 + (n - 2))}{2} + c_6 (n - 1) + c_7 (n - 1) + c_8 (n - 1) \\
+        & = c_1 n + c_2 (n - 1) + c_3 \frac{n(n - 1)}{2} + c_4 \frac{(n - 1)(n - 2)}{2} + \\
+            & \quad + c_5 \frac{(n - 1)(n - 2)}{2} + c_6 (n - 1) + c_7 (n - 1) + c_8 (n - 1) \\
+        & = \left(\frac{c_3}{2} + \frac{c_4}{2} + \frac{c_5}{2} \right) n^2 \\ 
+        & \quad + \left( c_1 + c_2 - \frac{c_3}{2} - \frac{3 c_4}{2} - \frac{3 c_5}{2} + c_6 + c_7 + c_8 \right) n \\
+        & \quad + \left( -c_2 + c_4 + c_5 - c_6 - c_7 - c_8 \right). \\
+    \end{split}
+\]
+\[
+    \Theta \left( n^2 \right)
+\]
+
+Ex. 2.2-3
+
+Ex. 2.3-3 \\
+\textbf{Initial assumptions: }
+\[
+    n = 2^k \text{, where } k \in \mathbb{N} - \{ 0 \} 
+\]
+\[
+    T(n) =
+    \begin{cases}
+        2               & \quad \text{if } n = 2 \\
+        2T(n/2) + n     & \quad \text{if } n = 2^k \text{, for } k > 1 \\
+    \end{cases}
+\]
+\textbf{Hypothesis: }
+\[
+    T(n) = n \lg n = n \log_2 n
+\] \\
+\textbf{Proof: } \\
+First we look at small cases(as advised in ``Concrete Mathematics'' by  Graham, Knuth, Patashnik).
+\[
+    \begin{split}
+        \text{For } n = 2 \text{ we have: } T(2) &= 2 = 2 \log_2 2. \\
+        \text{For } n = 4 \text{ we have: } T(4) &= 2 T \left( 2 \right) + 4 = 8 = 4 \log_2 4. \\
+        \text{For } n = 8 \text{ we have: } T(8) &= 2 T \left( 4 \right) + 8 = 24 = 8 \log_2 8. \\
+    \end{split}
+\]
+So we have basis for our induction:
+\[
+    T \left( 2^k \right) = 2 \log_2 2^k
+\]
+Then we have inductive step...
+\begin{proof}[Proof of \( T(n) = n \lg n \)]
+    \[
+        \begin{split}
+            T(2^{k + 1}) & = 2 T \left( \frac{2^{k + 1}}{2} \right) + 2^{k + 1} \\
+            & = 2 T \left( 2^k \right) + 2^{k + 1} \\
+            \text{Given the induction assumption: } \\
+            & = 2 \cdot 2^k \log_2 2^k + 2^{k + 1} \\
+            & = 2^{k + 1} \log_2 2^k + 2^{k + 1} \\
+            & = 2^{k + 1} \left( \log_2 2^k + 1 \right) \\
+            & = 2^{k + 1} \left( k + 1 \right) \\
+            & = 2^{k + 1} \log_2 2^{k + 1}  \\
+        \end{split}
+    \]
+\end{proof}
+
+Ex. 2.3-4 \\
+The time it takes to sort last element is just \( \Theta (1) \). The worst time it takes to insert element into sorted sequence of \( n - 1 \) elements is \( \Theta (n) \).
+\[
+    T(n) = 
+    \begin{cases}
+        \Theta (1)              & \quad \text{if } n = 1, \\
+        T(n - 1) + \Theta (n)   & \quad \text{if } n > 1. \\
+    \end{cases}
+\]
+
+Ex. 2.3-5
+\begin{algorithmic}[1]
+    \TITLE{\textsc{Iterative-Binary-Search\( (A, \nu )\)}}
+    \algcost{\textit{cost}}{\textit{times}}
+    \State \( leftEnd = 1 \)
+    \algcost{$c_1$}{$1$}
+    \State \( rightEnd = A.length \)
+    \algcost{$c_2$}{$1$}
+    \While{ \(leftEnd \ll rightEnd \)}
+    \algcost{$c_3$}{$?$}
+        \State \( middle = leftEnd + (rightEnd - leftEnd) / 2\)
+        \algcost{$c_4$}{$n$}
+        \If{\( A[middle] == \nu \)}
+        \algcost{$c_5$}{$n$}
+            \State \Return \( middle \)
+            \algcost{$c_6$}{$n$}
+        \EndIf
+        \If{\( A[middle] > \nu \)}
+        \algcost{$c_7$}{$n$}
+            \State \( rightEnd = middle - 1 \)
+            \algcost{$c_8$}{$n$}
+        \Else
+            \State \( leftEnd = middle + 1 \)
+            \algcost{$c_9$}{$n$}
+        \EndIf
+    \EndWhile
+    \State \Return \( NIL \)
+    \algcost{$c_{10}$}{$1$}
+\end{algorithmic}
+% \algcost{$c_5$}{$\sum_{i = 1}^{n - 1} (t_i - 1)$}
+
+\end{document}
