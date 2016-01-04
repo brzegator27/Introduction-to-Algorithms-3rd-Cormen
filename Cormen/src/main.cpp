@@ -17,7 +17,7 @@
 
 int main() {
 	//insertionSortMain();
-	//mergeSortMain();
+	mergeSortMain();
 	ex_2_3_2_Main();
 
 	std::cout << "\n" << "Press ENTER to continue...";
