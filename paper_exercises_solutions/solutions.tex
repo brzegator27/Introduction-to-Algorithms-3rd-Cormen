@@ -7,6 +7,8 @@
 \usepackage{amsthm}
 \usepackage[noend]{algpseudocode}
 
+\usepackage{xcolor}
+
 \title{Solutions to exercises from ``Introduction to Algorithms'' \\*3rd Edition by Cormen}
 \author{Jakub Brzegowski}
 \date{25 December 2015}
@@ -30,6 +32,15 @@
 
 \begin{document}
 \maketitle
+
+\begin{center}
+    \textcolor{red}{
+        Red color signify fragments which are not completed thus may be incorrect.
+    }\\
+    \textcolor{blue}{
+        Blue color signify fragments which are correct but should be improved in near future.
+    }
+\end{center}
 
 % \section{Introduction}
 Ex. 2.2-1
@@ -150,27 +161,123 @@ Ex. 2.3-5
     \algcost{$c_1$}{$1$}
     \State \( rightEnd = A.length \)
     \algcost{$c_2$}{$1$}
-    \While{ \(leftEnd \ll rightEnd \)}
-    \algcost{$c_3$}{$?$}
-        \State \( middle = leftEnd + (rightEnd - leftEnd) / 2\)
-        \algcost{$c_4$}{$n$}
+    \While{ \(leftEnd \leq rightEnd \)}
+    \algcost{$c_3$}{$\log_2 n + 1$}
+        \State \( middle = (rightEnd + leftEnd) / 2\)
+        \algcost{$c_4$}{$\log_2 n$}
         \If{\( A[middle] == \nu \)}
-        \algcost{$c_5$}{$n$}
+        \algcost{$c_5$}{$\log_2 n$}
             \State \Return \( middle \)
-            \algcost{$c_6$}{$n$}
+            \algcost{$c_6$}{$\log_2 n$}
         \EndIf
         \If{\( A[middle] > \nu \)}
-        \algcost{$c_7$}{$n$}
+        \algcost{$c_7$}{$\log_2 n$}
             \State \( rightEnd = middle - 1 \)
-            \algcost{$c_8$}{$n$}
+            \algcost{$c_8$}{$\log_2 n$}
         \Else
+            \algcost{$c_9$}{$0$}
             \State \( leftEnd = middle + 1 \)
-            \algcost{$c_9$}{$n$}
+            \algcost{$c_{10}$}{$\log_2 n$}
         \EndIf
     \EndWhile
     \State \Return \( NIL \)
-    \algcost{$c_{10}$}{$1$}
+    \algcost{$c_{11}$}{$1$}
 \end{algorithmic}
-% \algcost{$c_5$}{$\sum_{i = 1}^{n - 1} (t_i - 1)$}
+\begin{proof}[Proof of $\Theta \left( \log_2 n \right)$ for \textsc{Iterative-Binary-Search$(A, \nu )$}]
+\[
+    \begin{split}
+        T(n) & = c_3 \cdot \left( \log_2 n + 1 \right) + (c_4 + c_5 + c_6 + c_7 + c_8 + c_{10}) \cdot \log_2 n + c_1 + c_2 + c_{11} \\
+        & =  (c_3 + c_4 + c_5 + c_6 + c_7 + c_8 + c_{10}) \cdot \log_2 n + c_1 + c_2 + c_3 + c_{11}
+    \end{split}
+\]
+So...
+\[
+    \Theta \left( \log_2 n \right)
+\]
+\end{proof}
+
+Ex. 2.3-6 \\
+Standard insertion sort:
+\begin{algorithmic}[1]
+    \TITLE{\textsc{Insertion-Sort$(A)$}}
+    \algcost{\textit{cost}}{\textit{times}}
+    \For{\(j = 2 \ForsTo A.length\)}
+    \algcost{$c_1$}{$n$}
+        \State \(key = A[j]\)
+        \algcost{$c_2$}{$n - 1$}
+        \State //Insert $A[j]$ into the sorted sequence $A[1 \ldots j - 1]$.
+        \algcost{$0$}{$n - 1$}
+        \State \(i = j - 1\)
+        \algcost{$c_4$}{$n - 1$}
+        \While{ \(i > 0 \text{ and } A[i] > key  \)}
+        \algcost{$c_5$}{$\sum_{j = 2}^{n} t_j$}
+            \State \(A[i + 1] = A[i]\)
+            \algcost{$c_6$}{$\sum_{j = 2}^{n} \left( t_j - 1 \right)$}
+            \State \(i = i - 1\)
+            \algcost{$c_7$}{$\sum_{j = 2}^{n} \left( t_j - 1 \right)$}
+        \EndWhile
+        \State \(A[i + 1] = key\)
+        \algcost{$c_8$}{$n - 1$}
+    \EndFor
+\end{algorithmic}
+
+\[
+    \begin{split}
+        T(n) & = c_1 n + (c_2 + 0 + c_4 + c_8) (n - 1) + c_5 \sum_{j = 2}^{n} t_i + (c_6 + c_7) \sum_{j = 2}^{n} (t_i - 1)\\
+        & = c_1 n + (c_2 + c_4 + c_8) (n - 1) + c_5 \frac{(n - 1)(2 + n)}{2} + (c_6 + c_7) \frac{(n - 1)(1 + (n - 1))}{2}\\
+        & = c_1 n + (c_2 + c_4 + c_8) (n - 1) + c_5 \frac{n^2 + n - 2}{2} + (c_6 + c_7) \frac{n^2 - n}{2}\\
+        & = (\frac{c_5}{2} + \frac{c_6}{2} + \frac{c_7}{2}) n^2 + (c_1 + c_2 + c_4 + \frac{c_5}{2} - \frac{c_6}{2} - \frac{c_7}{2} + c_8) n - (c_2 + c_4 + c_5 + c_8)\\
+    \end{split}
+\]
+\[
+    \Theta \left( n^2 \right)
+\]
+
+\textcolor{red}{
+Insertion sort boosted with binary search:
+}
+\textcolor{red}{
+\begin{algorithmic}[1]
+    \TITLE{\textsc{Insertion-Sort$(A)$}}
+    \algcost{\textit{cost}}{\textit{times}}
+    \For{\(j = 2 \ForsTo A.length\)}
+    \algcost{$c_1$}{$n$}
+        \State \(key = A[j]\)
+        \algcost{$c_2$}{$n - 1$}
+        \State //Insert $A[j]$ into the sorted sequence $A[1 \ldots j - 1]$.
+        \algcost{$0$}{$n - 1$}
+        \State \(i = j - 1\)
+        \algcost{$c_4$}{$n - 1$}
+        \While{ \(i > 0 \text{ and } A[i] > key  \)}
+        \algcost{$c_5$}{$\sum_{j = 2}^{n} t_j$}
+            \State \(A[i + 1] = A[i]\)
+            \algcost{$c_6$}{$\sum_{j = 2}^{n} \left( t_j - 1 \right)$}
+            \State \(i = i - 1\)
+            \algcost{$c_7$}{$\sum_{j = 2}^{n} \left( t_j - 1 \right)$}
+        \EndWhile
+        \State \(A[i + 1] = key\)
+        \algcost{$c_8$}{$n - 1$}
+    \EndFor
+\end{algorithmic}
+}
+\textcolor{red}{
+\[
+    \begin{split}
+        T(n) & = c_1 n + (c_2 + 0 + c_4 + c_8) (n - 1) + c_5 \sum_{j = 2}^{n} t_i + (c_6 + c_7) \sum_{j = 2}^{n} (t_i - 1)\\
+        & = c_1 n + (c_2 + c_4 + c_8) (n - 1) + c_5 \frac{(n - 1)(2 + n)}{2} + (c_6 + c_7) \frac{(n - 1)(1 + (n - 1))}{2}\\
+        & = c_1 n + (c_2 + c_4 + c_8) (n - 1) + c_5 \frac{n^2 + n - 2}{2} + (c_6 + c_7) \frac{n^2 - n}{2}\\
+        & = (\frac{c_5}{2} + \frac{c_6}{2} + \frac{c_7}{2}) n^2 + (c_1 + c_2 + c_4 + \frac{c_5}{2} - \frac{c_6}{2} - \frac{c_7}{2} + c_8) n - (c_2 + c_4 + c_5 + c_8)\\
+    \end{split}
+\]
+}
+\textcolor{red}{
+\[
+    \Theta \left( n^2 \right)
+\]
+}
+
+\textcolor{blue}{
+    It is impossible to achieve worst-case running time of insertion sort boosted with binary search of $\Theta \left( n \log n \right)$, because even if we can find first smaller element than key from sorted sub-array $A[1 \ldots j - 1]$ in $\Theta \left( \log j \right)$, in the \textbf{while} loop of lines 5 - 7 there are moved elements bigger than key to bigger positions in array. It is done in worst time $\Theta \left( j \right)$ and it must be done despite using binary search. 
+}
 
 \end{document}
